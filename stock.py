@@ -118,17 +118,22 @@ class Fetcher:
 
 	def __init__(self):
 		pass
+		#TODO: How to write appropriate inits?
 
 
 
 class Query:
 
-'''
-	– Define a function that prints and/or returns the details corresponding to a specific time and ticker
-	symbol to the terminal.
-	– The class must have a method for initialization of its objects and any other methods you feel are
-	necessary.
-'''
+	def print_info(self, time, ticker):
+		conn = sqlite3.connect('stocks_now.db') #TODO Database Name  #TODO connection check
+		c= conn.curosr()
+		c.execute(''' SELECT * FROM StockData WHERE Time==time and Ticker==ticker''')
+		print(c.fetchone())
+	
+	def __init__(self):
+		pass
+		#TODO: How to write appropriate inits?
+
 
 
 
