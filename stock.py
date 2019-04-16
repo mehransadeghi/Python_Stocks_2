@@ -109,8 +109,6 @@ class Fetcher:
 		self.database_name = db
 		self.time_lim = tl
 
-		#TODO: How to write appropriate inits?
-
 
 
 class Query:
