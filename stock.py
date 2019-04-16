@@ -1,12 +1,13 @@
-import sys
 import requests
 from pyquery import PyQuery
 from iex import Stock
 from selenium import webdriver
+import datetime
+import time
+import sqlite3
 
-class Tickers:
-'''
-This class must:
+'''	
+	This class must:
 	– Have a function, say save tickers that fetches the first n valid tickers from the URL 1 and writes the
 	tickers in a file, say tickers.txt.
 	– To ensure that a ticker is valid, you should use the iex-api-python to verify that the price function
@@ -16,12 +17,21 @@ This class must:
 	as an optional argument and will be at most 110.
 	– The class must have a method for initialization of its objects and any other methods you feel are
 	necessary.
+
 '''
+
+
+class Tickers:
+	url = ""
+
+	def __init__(self):
+		self.url = 'http://www.nasdaq.com/screening/companies-by-industry.aspx?exchange=NASDAQrender=download'
+		# TODO: How to write appropriate inits?
 
 	def pull110ItemsURL(self):
 		# Set up Chrome instance of this url
 		driver = webdriver.Chrome(executable_path='./chromedriver')
-		driver.get('http://www.nasdaq.com/screening/companies-by-industry.aspx?exchange=NASDAQrender=download')
+		driver.get(self.url)
 
 		# Click on the 150 option in page size select so we can get all the symbols we need
 		page_size_select = driver.find_element_by_id('main_content_lstpagesize')
@@ -32,12 +42,12 @@ This class must:
 
 		return driver.current_url
 
-	def save_tickers(self, n, url, file_name):
+	def save_tickers(self, n, file_name):
 		if int(n) > 110:
-			raise Exception("You need to give me a number less than or equal to 150!")
+			raise Exception("You need to give me a number less than or equal to 110!")
 
 		# Create request with 150 item url
-		request = requests.get(url=pull110ItemsURL())
+		request = requests.get(url=Tickers.pull110ItemsURL())
 		parser = PyQuery(request.text)
 		table = parser("#CompanylistResults")
 
@@ -64,15 +74,10 @@ This class must:
 		f.close()
 
 
+class Fetcher:
 	def __init__(self):
 		pass
 		#TODO: How to write appropriate inits?
-		
-
-
-import datetime
-import time
-class Fetcher:
 
 	def update_ticker(self, ticker, conn, current_time):
 		ticker_info = Stock(symbol=ticker).quote()
@@ -86,16 +91,16 @@ class Fetcher:
 		currentDT = datetime.datetime.now()
 		endTime = currentDT + datetime.timedelta(seconds=int(time_lim))
 
-		if(currentDT < endTime):
+		if currentDT < endTime:
 			fp = open(ticker_file)
 			conn = sqlite3.connect('stocks_now.db') #TODO Database Name  #TODO connection check
 		while currentDT < endTime:
 			# Calculate time to sleep until next minute starts
 			sleepTime = 60 - (datetime.datetime.now().second + datetime.datetime.now().microsecond / 1000000.0)
 			time.sleep(sleepTime)
-			current_time = two_digit_time(currentDT)
+			current_time = Fetcher.two_digit_time(currentDT=currentDT)
 			for ticker in fp:
-				update_ticker(ticker=ticker.strip('\n'), conn, current_time)
+				Fetcher.update_ticker(ticker=ticker.strip('\n'), conn=conn, current_time=current_time)
 			fp.close()
 
 	def two_digit_time(self, currentDT):
@@ -111,28 +116,22 @@ class Fetcher:
 		else:
 			hour = str(hour)
 
-		return('{}:{}'.format(hour, minute))
-
-	def __init__(self):
-		pass
-		#TODO: How to write appropriate inits?
-
+		return '{}:{}'.format(hour, minute)
 
 
 class Query:
-
-	def print_info(self, time, ticker):
-		conn = sqlite3.connect('stocks_now.db') #TODO Database Name  #TODO connection check
-		c= conn.curosr()
-		c.execute(''' SELECT * FROM StockData WHERE Time==time and Ticker==ticker''')
-		print(c.fetchone())
-	
 	def __init__(self):
 		pass
 		#TODO: How to write appropriate inits?
 
 
+	def print_info(self, time, ticker):
+		conn = sqlite3.connect('stocks_now.db') #TODO Database Name  #TODO connection check
+		c = conn.curosr()
+		c.execute(''' SELECT * FROM StockData WHERE Time==time and Ticker==ticker''')
+		print(c.fetchone())
 
 
-
+if __name__ == "__main__":
+	# Tickers.save_tickers(n=30, file_name="tickers.txt")
 
