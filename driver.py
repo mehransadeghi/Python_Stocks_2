@@ -1,3 +1,30 @@
+import argparse
+import sys
+
+import stock
+
+if __name__ == '__main__':
+	parser = argparse.ArgumentParser()
+	parser.add_argument("--operation")
+	parser.add_argument("--time")
+	parser.add_argument("--ticker")
+	parser.add_argument("--time_limit")
+	parser.add_argument("--db")
+	parser.add_argument("--ticker_count")
+
+	args = parser.parse_args()
+	if(args.operation=='Fetcher'):
+		fetcher = stock.Fetcher(args.db, int(args.time_limit))
+		fetcher.fetch_all_data()
+	elif(args.operation=='Ticker'):
+		ticker=stock.Tickers(int(args.ticker_count))
+		ticker.save_tickers()
+	elif(args.operation=='Query'):
+		print(3)
+	else:
+		print('invalid value for parameter operation')
+		sys.exit()
+
 '''
 – Should have a main module that takes the following flags:
 ∗ operation: Values are: ’Fetcher’, ’Ticker’, or ’Query’ Based on the value of this variable, you will
