@@ -24,6 +24,8 @@ class Tickers:
 
 		return driver.current_url
 
+	def __str__(self):
+		return str(self.ticker_count)
 
 
 	def save_tickers(self, file_name='tickers.txt'):
@@ -56,7 +58,7 @@ class Tickers:
 			f.write(symbol + '\n')	
 		f.close()
 
-		
+
 
 import csv
 import datetime
