@@ -72,9 +72,10 @@ class Fetcher:
 		s=Stock(str(ticker))
 		ticker_info = Stock(ticker).quote()
 		c = conn.cursor()
-		c.execute(''' INSERT INTO StockData VALUES 
-			(current_time, ticker, ticker_info['low'], ticker_info['high'], ticker_info['open'],ticker_info['close'],
-			ticker_info['latestPrice'], ticker_info['latestVolume'])  ''')
+		
+		cmd = ''' INSERT INTO StockData VALUES ('{}', '{}', '{}', '{}', '{}', '{}', {}, {} ) '''.format(current_time, ticker, ticker_info['low'], ticker_info['high'], ticker_info['open'],ticker_info['close'],
+			ticker_info['latestPrice'], ticker_info['latestVolume'])
+		c.execute(cmd)
 		conn.commit()
 
 	def fetch_all_data(self, ticker_file='tickers.txt'): #TODO: TickerFile
@@ -82,9 +83,10 @@ class Fetcher:
 		currentDT = datetime.datetime.now()
 		endTime = currentDT + datetime.timedelta(seconds=int(self.time_lim))
 		if(currentDT < endTime):
-			fp = open(ticker_file)
 			conn = sqlite3.connect(self.database_name)  #TODO connection check
 		while currentDT < endTime:
+			print(currentDT, endTime)
+			fp = open(ticker_file)
 			# Calculate time to sleep until next minute starts
 			sleepTime = 60 - (datetime.datetime.now().second + datetime.datetime.now().microsecond / 1000000.0)
 			time.sleep(sleepTime)
@@ -93,6 +95,7 @@ class Fetcher:
 			for ticker in fp:
 				self.update_ticker(ticker.strip(), conn, current_time)
 			fp.close()
+			currentDT = datetime.datetime.now()
 
 	def two_digit_time(self, currentDT):
 		hour = currentDT.hour
@@ -117,15 +120,18 @@ class Fetcher:
 
 class Query:
 
-	def print_info(self, time, ticker):
-		conn = sqlite3.connect('stocks_now.db') #TODO Database Name  #TODO connection check
-		c= conn.curosr()
-		c.execute(''' SELECT * FROM StockData WHERE Time==time and Ticker==ticker''')
+	def print_info(self):
+		conn = sqlite3.connect(self.database_name)
+		c= conn.cursor()
+		cmd = ''' SELECT * FROM StockData WHERE Time=='{}' and Ticker=='{}' '''.format(self.time, self.ticker)
+		c.execute(cmd)
 		print(c.fetchone())
 	
-	def __init__(self):
-		pass
-		#TODO: How to write appropriate inits?
+	def __init__(self, db, t, tn):
+		self.database_name = db
+		self.time = t
+		self.ticker=tn
+		
 
 
 

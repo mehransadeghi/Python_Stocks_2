@@ -105,6 +105,6 @@ venv.bak/
 
 
 create_db.py
-
+stocks new.db
 test.py
 tickers.txt

@@ -20,7 +20,8 @@ if __name__ == '__main__':
 		ticker=stock.Tickers(int(args.ticker_count))
 		ticker.save_tickers()
 	elif(args.operation=='Query'):
-		print(3)
+		query = stock.Query(args.db, args.time, args.ticker)
+		query.print_info()
 	else:
 		print('invalid value for parameter operation')
 		sys.exit()
