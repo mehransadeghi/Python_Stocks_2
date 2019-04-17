@@ -34,22 +34,25 @@ class Tickers:
 		request = requests.get(url=self.pull150ItemsURL())
 		parser = PyQuery(request.text)
 		table = parser("#CompanylistResults")
-
+		
 		table_parser = PyQuery(table)
 		symbols = table_parser("h3")
 		symbol_list = [symbol for symbol in symbols.text().split()]
-		print(len(symbol_list))
-		for i, ticker in enumerate(symbol_list):
+		
+		valid_tickers=[]
+		for ticker in (symbol_list):
 			try:
-				if i < int(self.ticker_count):
+				if len(valid_tickers) < int(self.ticker_count):
 					Stock(ticker).price()
+					valid_tickers.append(ticker)
+					print(ticker)
 				else:
 					break
 			except:
-				symbol_list.remove(ticker)
-		print(len(symbol_list))
+				pass
+		
 		f = open(file_name, "w")
-		for symbol in (symbol_list):
+		for symbol in (valid_tickers):
 			f.write(symbol + '\n')	
 		f.close()
 
@@ -65,7 +68,8 @@ import sqlite3
 class Fetcher:
 
 	def update_ticker(self, ticker, conn, current_time):
-		print(ticker, len(ticker))
+		#print(ticker, len(ticker))
+		s=Stock(str(ticker))
 		ticker_info = Stock(ticker).quote()
 		c = conn.cursor()
 		c.execute(''' INSERT INTO StockData VALUES 
