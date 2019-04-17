@@ -5,12 +5,12 @@ import sys
 from pyquery import PyQuery
 from iex import Stock
 from selenium import webdriver
-
+MAX_TICKERS=110
 class Tickers:
 	def __init__(self, n):
 		self.ticker_count=n
 
-	def pull150ItemsURL(self):
+	def pull200ItemsURL(self):
 		# Set up Chrome instance of this url
 		driver = webdriver.Chrome(executable_path='./chromedriver')
 		driver.get('http://www.nasdaq.com/screening/companies-by-industry.aspx?exchange=NASDAQrender=download')
@@ -29,11 +29,11 @@ class Tickers:
 
 
 	def save_tickers(self, file_name='tickers.txt'):
-		if int(self.ticker_count) > 110:
+		if int(self.ticker_count) > MAX_TICKERS:
 			raise Exception("You need to give me a number less than or equal to 110!")
 
 		# Create request with 150 item url
-		request = requests.get(url=self.pull150ItemsURL())
+		request = requests.get(url=self.pull200ItemsURL())
 		parser = PyQuery(request.text)
 		table = parser("#CompanylistResults")
 		
