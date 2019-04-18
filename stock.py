@@ -1,30 +1,31 @@
 import requests
-
-import sys
-
 from pyquery import PyQuery
 from iex import Stock
 from selenium import webdriver
 
+
 class Tickers:
     """
+    A class to fetch all tickers and store them in a file tickers.txt
 
+    :type ticker_count: int
+    :param ticker_count: the number of tickers to get
     """
     def __init__(self, n):
         """
-		creates the variables associated with the class
+        creates the variables associated with the class
 
-		:type n: int
-		:param n: the number of tickers to get
-		"""
+        :type n: int
+        :param n: the number of tickers to get
+        """
         self.ticker_count = n
 
     def pull200ItemsURL(self):
         """
-		Clicks a button to make the webpage display 200 tickers
+        Clicks a button to make the webpage display 200 tickers
 
-		:return: the url to a page containing 200 ticker symbols
-		"""
+        :return: the url to a page containing 200 ticker symbols
+        """
         # Set up Chrome instance of this url
         driver = webdriver.Chrome(executable_path='./chromedriver')
         driver.get('http://www.nasdaq.com/screening/companies-by-industry.aspx?exchange=NASDAQrender=download')
@@ -38,19 +39,21 @@ class Tickers:
 
         return driver.current_url
 
-
     def __str__(self):
+        """
+        :return: the number of tickers to grab from the url
+        """
         return str(self.ticker_count)
-
 
     def save_tickers(self, file_name='tickers.txt'):
         """
-		writes ticker symbols to a file named tickers.txt
+        writes ticker symbols to a file named tickers.txt
 
-		:type file_name: string
-		:param file_name: name of the file in which to store the ticker symbols
-		:return:
-		"""
+        :type file_name: string
+        :param file_name: name of the file in which to store the ticker symbols
+
+        :return: void
+        """
         if int(self.ticker_count) > 110:
             raise Exception("You need to give me a number less than or equal to 110!")
 
@@ -75,7 +78,6 @@ class Tickers:
             except:
                 pass
 
-
         f = open(file_name, "w")
         for symbol in (valid_tickers):
             f.write(symbol + '\n')
@@ -84,7 +86,7 @@ class Tickers:
 
 
 
-import csv
+
 import datetime
 import time
 
@@ -93,24 +95,43 @@ import sqlite3
 
 class Fetcher:
     """
+    A class to write all relevant information for the tickers in tickers.txt to a database
 
-	"""
-    def update_ticker(self, ticker, conn, current_time):
-        #print(ticker, len(ticker))
+    :type database_name: string
+    :param database_name: the name of the database to store the information in
+
+    :type time_lim: int
+    :param time_lim: the time, in seconds, to update the database
+    """
+
+    def __init__(self, db, tl):
         """
-		creates a new row in the database for the specified ticker and time
+        creates the variables associated with the class
 
-		:type ticker: string
-		:param ticker:
+        :type db: string
+        :param db: the name of the database to store the information in
 
-		:type conn:
-		:param conn: the connection to the database
+        :type tl: int
+        :param tl: the time, in seconds, to update the database
+        """
+        self.database_name = db
+        self.time_lim = tl
 
-		:type current_time: datetime
-		:param current_time: the current time
+    def update_ticker(self, ticker, conn, current_time):
+        """
+        creates a new row in the database for the specified ticker and time
 
-		:return:
-		"""
+        :type ticker: string
+        :param ticker:
+
+        :type conn:
+        :param conn: the connection to the database
+
+        :type current_time: datetime
+        :param current_time: the current time
+
+        :return: void
+        """
 
         s = Stock(str(ticker))
         print(ticker, len(ticker))
@@ -118,16 +139,18 @@ class Fetcher:
         c = conn.cursor()
 
         cmd = ''' INSERT INTO StockData VALUES ('{}', '{}', '{}', '{}', '{}', '{}', {}, {} ) '''.format(current_time, ticker, ticker_info['low'], ticker_info['high'], ticker_info['open'],ticker_info['close'],
-			ticker_info['latestPrice'], ticker_info['latestVolume'])
+                                                                                                        ticker_info['latestPrice'], ticker_info['latestVolume'])
         c.execute(cmd)
         conn.commit()
 
     def fetch_all_data(self, ticker_file='tickers.txt'): #TODO: TickerFile
         """
-		:type ticker_file: string
-		:param ticker_file: name of the file in which the tickers are stored
-		:return:
-		"""
+        waits until the start of the next minute and then writes the tickers from tickers.txt to a database
+
+        :type ticker_file: string
+        :param ticker_file: name of the file in which the tickers are stored
+        :return: void
+        """
         currentDT = datetime.datetime.now()
         endTime = currentDT + datetime.timedelta(seconds=int(self.time_lim))
         if(currentDT < endTime):
@@ -146,15 +169,15 @@ class Fetcher:
             fp.close()
             currentDT = datetime.datetime.now()
 
-
     def two_digit_time(self, currentDT):
         """
-		formats the time that will be inserted into the database
+        formats the time that will be inserted into the database
 
-		:type currentDT: datetime
-		:param currentDT: the current time
-		:return:
-		"""
+        :type currentDT: datetime
+        :param currentDT: the current time
+
+        :return: string containing the time formatted as HH:MM
+        """
         hour = currentDT.hour
         minute = currentDT.minute
 
@@ -170,52 +193,50 @@ class Fetcher:
 
         return('{}:{}'.format(hour, minute))
 
-    def __init__(self, db, tl):
-        """
-		creates the variables associated with the class
-
-		:type db:
-		:param db:
-
-		:type tl:
-		:param tl:
-		"""
-        self.database_name = db
-        self.time_lim = tl
-
-
 
 class Query:
     """
-	"""
-    def print_info(self):
-        conn = sqlite3.connect(self.database_name)
-        c= conn.cursor()
-        cmd = ''' SELECT * FROM StockData WHERE Time=='{}' and Ticker=='{}' '''.format(self.time, self.ticker)
-        c.execute(cmd)
+    A class to query the database for a certain time and ticker
 
-    def print_info(self, time, ticker):
-        """"
+    :type database_name: string
+    :param database_name: the name of the database that information is stored in
 
-		:type time: string
-		:param time: the time to print the specified ticker's information for
+    :type time: string
+    :param time: the time to search for in the database
 
-		:type ticker: string
-		:param ticker: the ticker that will have its information printed
-		:return:
-		"""
-        conn = sqlite3.connect('stocks_now.db') #TODO Database Name  #TODO connection check
-        c= conn.curosr()
-        c.execute(''' SELECT * FROM StockData WHERE Time==time and Ticker==ticker''')
-        print(c.fetchone())
+    :type ticker: string
+    :param ticker: the ticker to for in the database
 
+    """
     def __init__(self, db, t, tn):
         """
         creates the variables associated with the class
+
+        :type db: string
+        :param db: the name of the database that information is stored in
+
+        :type t: string
+        :param t: the time to search for in the database
+
+        :type tn: string
+        :param tn: the ticker to for in the database
         """
         self.database_name = db
         self.time = t
-        self.ticker=tn
+        self.ticker = tn
+
+    def print_info(self):
+        """
+        queries the database for a specific time and ticker
+        :return: void
+        """
+        conn = sqlite3.connect(self.database_name)
+        c = conn.cursor()
+        cmd = ''' SELECT * FROM StockData WHERE Time=='{}' and Ticker=='{}' '''.format(self.time, self.ticker)
+        c.execute(cmd)
+
+
+
 
 
 
