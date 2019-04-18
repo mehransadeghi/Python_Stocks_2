@@ -122,13 +122,13 @@ class Fetcher:
         creates a new row in the database for the specified ticker and time
 
         :type ticker: string
-        :param ticker:
+        :param ticker: The ticker to be inserted
 
         :type conn:
         :param conn: the connection to the database
 
         :type current_time: datetime
-        :param current_time: the current time
+        :param current_time: the current time to be inserted
 
         :return: void
         """
@@ -205,7 +205,7 @@ class Query:
     :param time: the time to search for in the database
 
     :type ticker: string
-    :param ticker: the ticker to for in the database
+    :param ticker: the ticker to search for in the database
 
     """
     def __init__(self, db, t, tn):
@@ -228,6 +228,7 @@ class Query:
     def print_info(self):
         """
         queries the database for a specific time and ticker
+
         :return: void
         """
         conn = sqlite3.connect(self.database_name)
