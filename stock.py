@@ -9,14 +9,14 @@ class Tickers:
     A class to fetch all tickers and store them in a file tickers.txt
 
     :type ticker_count: int
-    :param ticker_count: the number of tickers to get
+    :param ticker_count: The number of tickers to get
     """
     def __init__(self, n):
         """
-        creates the variables associated with the class
+        Creates the variables associated with the class
 
         :type n: int
-        :param n: the number of tickers to get
+        :param n: The number of tickers to get
         """
         self.ticker_count = n
 
@@ -24,7 +24,8 @@ class Tickers:
         """
         Clicks a button to make the webpage display 200 tickers
 
-        :return: the url to a page containing 200 ticker symbols
+        :return: The url to a page containing 200 ticker symbols
+        :rtype: string
         """
         # Set up Chrome instance of this url
         driver = webdriver.Chrome(executable_path='./chromedriver')
@@ -42,17 +43,18 @@ class Tickers:
     def __str__(self):
         """
         :return: the number of tickers to grab from the url
+        :rtype: string
         """
         return str(self.ticker_count)
 
     def save_tickers(self, file_name='tickers.txt'):
         """
-        writes ticker symbols to a file named tickers.txt
+        Writes ticker symbols to a file named tickers.txt
 
         :type file_name: string
-        :param file_name: name of the file in which to store the ticker symbols
+        :param file_name: Name of the file in which to store the ticker symbols
 
-        :return: void
+        :rtype: void
         """
         if int(self.ticker_count) > 110:
             raise Exception("You need to give me a number less than or equal to 110!")
@@ -98,39 +100,39 @@ class Fetcher:
     A class to write all relevant information for the tickers in tickers.txt to a database
 
     :type database_name: string
-    :param database_name: the name of the database to store the information in
+    :param database_name: The name of the database to store the information in
 
     :type time_lim: int
-    :param time_lim: the time, in seconds, to update the database
+    :param time_lim: The time, in seconds, to update the database
     """
 
     def __init__(self, db, tl):
         """
-        creates the variables associated with the class
+        Creates the variables associated with the class
 
         :type db: string
-        :param db: the name of the database to store the information in
+        :param db: The name of the database to store the information in
 
         :type tl: int
-        :param tl: the time, in seconds, to update the database
+        :param tl: The time, in seconds, to update the database
         """
         self.database_name = db
         self.time_lim = tl
 
     def update_ticker(self, ticker, conn, current_time):
         """
-        creates a new row in the database for the specified ticker and time
+        Creates a new row in the database for the specified ticker and time
 
         :type ticker: string
         :param ticker: The ticker to be inserted
 
         :type conn:
-        :param conn: the connection to the database
+        :param conn: The connection to the database
 
         :type current_time: datetime
-        :param current_time: the current time to be inserted
+        :param current_time: The current time to be inserted
 
-        :return: void
+        :rtype: void
         """
 
         s = Stock(str(ticker))
@@ -145,11 +147,12 @@ class Fetcher:
 
     def fetch_all_data(self, ticker_file='tickers.txt'): #TODO: TickerFile
         """
-        waits until the start of the next minute and then writes the tickers from tickers.txt to a database
+        Waits until the start of the next minute and then writes the tickers from tickers.txt to a database
 
         :type ticker_file: string
-        :param ticker_file: name of the file in which the tickers are stored
-        :return: void
+        :param ticker_file: Name of the file in which the tickers are stored
+
+        :rtype: void
         """
         currentDT = datetime.datetime.now()
         endTime = currentDT + datetime.timedelta(seconds=int(self.time_lim))
@@ -171,12 +174,13 @@ class Fetcher:
 
     def two_digit_time(self, currentDT):
         """
-        formats the time that will be inserted into the database
+        Formats the time that will be inserted into the database
 
         :type currentDT: datetime
-        :param currentDT: the current time
+        :param currentDT: The current time
 
-        :return: string containing the time formatted as HH:MM
+        :return: The time formatted as HH:MM
+        :rtype: string
         """
         hour = currentDT.hour
         minute = currentDT.minute
@@ -199,13 +203,13 @@ class Query:
     A class to query the database for a certain time and ticker
 
     :type database_name: string
-    :param database_name: the name of the database that information is stored in
+    :param database_name: The name of the database that information is stored in
 
     :type time: string
-    :param time: the time to search for in the database
+    :param time: The time to search for in the database
 
     :type ticker: string
-    :param ticker: the ticker to search for in the database
+    :param ticker: The ticker to search for in the database
 
     """
     def __init__(self, db, t, tn):
@@ -213,13 +217,13 @@ class Query:
         creates the variables associated with the class
 
         :type db: string
-        :param db: the name of the database that information is stored in
+        :param db: The name of the database that information is stored in
 
         :type t: string
-        :param t: the time to search for in the database
+        :param t: The time to search for in the database
 
         :type tn: string
-        :param tn: the ticker to for in the database
+        :param tn: The ticker to for in the database
         """
         self.database_name = db
         self.time = t
@@ -227,9 +231,9 @@ class Query:
 
     def print_info(self):
         """
-        queries the database for a specific time and ticker
+        Queries the database for a specific time and ticker
 
-        :return: void
+        :rtype: void
         """
         conn = sqlite3.connect(self.database_name)
         c = conn.cursor()

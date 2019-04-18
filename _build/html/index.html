@@ -44,20 +44,20 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>database_name</strong> (<em>string</em>) – the name of the database to store the information in</p></li>
-<li><p><strong>time_lim</strong> (<em>int</em>) – the time, in seconds, to update the database</p></li>
+<li><p><strong>database_name</strong> (<em>string</em>) – The name of the database to store the information in</p></li>
+<li><p><strong>time_lim</strong> (<em>int</em>) – The time, in seconds, to update the database</p></li>
 </ul>
 </dd>
 </dl>
 <dl class="method">
 <dt id="stock.Fetcher.fetch_all_data">
 <code class="descname">fetch_all_data</code><span class="sig-paren">(</span><em>ticker_file='tickers.txt'</em><span class="sig-paren">)</span><a class="headerlink" href="#stock.Fetcher.fetch_all_data" title="Permalink to this definition">¶</a></dt>
-<dd><p>waits until the start of the next minute and then writes the tickers from tickers.txt to a database</p>
+<dd><p>Waits until the start of the next minute and then writes the tickers from tickers.txt to a database</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>ticker_file</strong> (<em>string</em>) – name of the file in which the tickers are stored</p>
+<dd class="field-odd"><p><strong>ticker_file</strong> (<em>string</em>) – Name of the file in which the tickers are stored</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Return type</dt>
 <dd class="field-even"><p>void</p>
 </dd>
 </dl>
@@ -66,13 +66,16 @@
 <dl class="method">
 <dt id="stock.Fetcher.two_digit_time">
 <code class="descname">two_digit_time</code><span class="sig-paren">(</span><em>currentDT</em><span class="sig-paren">)</span><a class="headerlink" href="#stock.Fetcher.two_digit_time" title="Permalink to this definition">¶</a></dt>
-<dd><p>formats the time that will be inserted into the database</p>
+<dd><p>Formats the time that will be inserted into the database</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>currentDT</strong> (<em>datetime</em>) – the current time</p>
+<dd class="field-odd"><p><strong>currentDT</strong> (<em>datetime</em>) – The current time</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>string containing the time formatted as HH:MM</p>
+<dd class="field-even"><p>The time formatted as HH:MM</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>string</p>
 </dd>
 </dl>
 </dd></dl>
@@ -80,16 +83,16 @@
 <dl class="method">
 <dt id="stock.Fetcher.update_ticker">
 <code class="descname">update_ticker</code><span class="sig-paren">(</span><em>ticker</em>, <em>conn</em>, <em>current_time</em><span class="sig-paren">)</span><a class="headerlink" href="#stock.Fetcher.update_ticker" title="Permalink to this definition">¶</a></dt>
-<dd><p>creates a new row in the database for the specified ticker and time</p>
+<dd><p>Creates a new row in the database for the specified ticker and time</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>ticker</strong> (<em>string</em>) – The ticker to be inserted</p></li>
-<li><p><strong>conn</strong> – the connection to the database</p></li>
-<li><p><strong>current_time</strong> (<em>datetime</em>) – the current time to be inserted</p></li>
+<li><p><strong>conn</strong> – The connection to the database</p></li>
+<li><p><strong>current_time</strong> (<em>datetime</em>) – The current time to be inserted</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Return type</dt>
 <dd class="field-even"><p>void</p>
 </dd>
 </dl>
@@ -104,18 +107,18 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>database_name</strong> (<em>string</em>) – the name of the database that information is stored in</p></li>
-<li><p><strong>time</strong> (<em>string</em>) – the time to search for in the database</p></li>
-<li><p><strong>ticker</strong> (<em>string</em>) – the ticker to search for in the database</p></li>
+<li><p><strong>database_name</strong> (<em>string</em>) – The name of the database that information is stored in</p></li>
+<li><p><strong>time</strong> (<em>string</em>) – The time to search for in the database</p></li>
+<li><p><strong>ticker</strong> (<em>string</em>) – The ticker to search for in the database</p></li>
 </ul>
 </dd>
 </dl>
 <dl class="method">
 <dt id="stock.Query.print_info">
 <code class="descname">print_info</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#stock.Query.print_info" title="Permalink to this definition">¶</a></dt>
-<dd><p>queries the database for a specific time and ticker</p>
+<dd><p>Queries the database for a specific time and ticker</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>void</p>
 </dd>
 </dl>
@@ -129,7 +132,7 @@
 <dd><p>A class to fetch all tickers and store them in a file tickers.txt</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>ticker_count</strong> (<em>int</em>) – the number of tickers to get</p>
+<dd class="field-odd"><p><strong>ticker_count</strong> (<em>int</em>) – The number of tickers to get</p>
 </dd>
 </dl>
 <dl class="method">
@@ -138,7 +141,10 @@
 <dd><p>Clicks a button to make the webpage display 200 tickers</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>the url to a page containing 200 ticker symbols</p>
+<dd class="field-odd"><p>The url to a page containing 200 ticker symbols</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>string</p>
 </dd>
 </dl>
 </dd></dl>
@@ -146,12 +152,12 @@
 <dl class="method">
 <dt id="stock.Tickers.save_tickers">
 <code class="descname">save_tickers</code><span class="sig-paren">(</span><em>file_name='tickers.txt'</em><span class="sig-paren">)</span><a class="headerlink" href="#stock.Tickers.save_tickers" title="Permalink to this definition">¶</a></dt>
-<dd><p>writes ticker symbols to a file named tickers.txt</p>
+<dd><p>Writes ticker symbols to a file named tickers.txt</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>file_name</strong> (<em>string</em>) – name of the file in which to store the ticker symbols</p>
+<dd class="field-odd"><p><strong>file_name</strong> (<em>string</em>) – Name of the file in which to store the ticker symbols</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Return type</dt>
 <dd class="field-even"><p>void</p>
 </dd>
 </dl>
