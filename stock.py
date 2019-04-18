@@ -38,6 +38,10 @@ class Tickers:
 
 		return driver.current_url
 
+	def __str__(self):
+		return str(self.ticker_count)
+
+
 	def save_tickers(self, file_name='tickers.txt'):
 		"""
 		writes ticker symbols to a file named tickers.txt
@@ -57,22 +61,25 @@ class Tickers:
 		table_parser = PyQuery(table)
 		symbols = table_parser("h3")
 		symbol_list = [symbol for symbol in symbols.text().split()]
-		print(len(symbol_list))
-		for i, ticker in enumerate(symbol_list):
+
+		valid_tickers=[]
+		for ticker in (symbol_list):
 			try:
-				if i < int(self.ticker_count):
+				if len(valid_tickers) < int(self.ticker_count):
 					Stock(ticker).price()
+					valid_tickers.append(ticker)
+					print(ticker)
 				else:
 					symbol_list.remove(ticker)
 			except:
-				symbol_list.remove(ticker)
-		print(len(symbol_list))
+				pass
+
 		f = open(file_name, "w")
-		for symbol in (symbol_list):
+		for symbol in (valid_tickers):
 			f.write(symbol + '\n')	
 		f.close()
 
-		
+
 
 import csv
 import datetime
@@ -86,6 +93,8 @@ class Fetcher:
 
 	"""
 	def update_ticker(self, ticker, conn, current_time):
+		#print(ticker, len(ticker))
+		s=Stock(str(ticker))
 		"""
 		creates a new row in the database for the specified ticker and time
 
@@ -103,19 +112,10 @@ class Fetcher:
 		print(ticker, len(ticker))
 		ticker_info = Stock(ticker).quote()
 		c = conn.cursor()
-		current_time = (current_time,)
-		ticker = (ticker,)
-		low = (ticker_info['low'],)
-		high = (ticker_info['high'],)
-		open = (ticker_info['open'],)
-		close = (ticker_info['close'],)
-		latestPrice = (ticker_info['latestPrice'],)
-		latestVolume = (ticker_info['latestVolume'],)
-		ticker_infolist = [current_time, ticker, low, high, open, close, latestPrice, latestVolume]
-		c.execute("INSERT INTO StockData VALUES (?,?,?,?,?,?,?,?)", ticker_infolist)
-		# c.execute(''' INSERT INTO StockData VALUES
-		# 	(current_time, ticker, ticker_info[low], ticker_info[high], ticker_info[open],ticker_info[close],
-		# 	ticker_info[latestPrice], ticker_info[latestVolume])  ''')
+
+		cmd = ''' INSERT INTO StockData VALUES ('{}', '{}', '{}', '{}', '{}', '{}', {}, {} ) '''.format(current_time, ticker, ticker_info['low'], ticker_info['high'], ticker_info['open'],ticker_info['close'],
+			ticker_info['latestPrice'], ticker_info['latestVolume'])
+		c.execute(cmd)
 		conn.commit()
 
 	def fetch_all_data(self, ticker_file='tickers.txt'): #TODO: TickerFile
@@ -127,9 +127,10 @@ class Fetcher:
 		currentDT = datetime.datetime.now()
 		endTime = currentDT + datetime.timedelta(seconds=int(self.time_lim))
 		if(currentDT < endTime):
-			fp = open(ticker_file)
 			conn = sqlite3.connect(self.database_name)  #TODO connection check
 		while currentDT < endTime:
+			print(currentDT, endTime)
+			fp = open(ticker_file)
 			# Calculate time to sleep until next minute starts
 			sleepTime = 60 - (datetime.datetime.now().second + datetime.datetime.now().microsecond / 1000000.0)
 			time.sleep(sleepTime)
@@ -138,6 +139,7 @@ class Fetcher:
 			for ticker in fp:
 				self.update_ticker(ticker.strip(), conn, current_time)
 			fp.close()
+			currentDT = datetime.datetime.now()
 
 	def two_digit_time(self, currentDT):
 		"""
@@ -178,10 +180,16 @@ class Fetcher:
 
 class Query:
 	"""
-
 	"""
+
+	def print_info(self):
+		conn = sqlite3.connect(self.database_name)
+		c= conn.cursor()
+		cmd = ''' SELECT * FROM StockData WHERE Time=='{}' and Ticker=='{}' '''.format(self.time, self.ticker)
+		c.execute(cmd)
+
 	def print_info(self, time, ticker):
-		"""
+		""""
 
 		:type time: string
 		:param time: the time to print the specified ticker's information for
@@ -195,6 +203,11 @@ class Query:
 		c.execute(''' SELECT * FROM StockData WHERE Time==time and Ticker==ticker''')
 		print(c.fetchone())
 	
+	def __init__(self, db, t, tn):
+		self.database_name = db
+		self.time = t
+		self.ticker=tn
+
 	def __init__(self):
 		"""
 		creates the variables associated with the class
