@@ -60,32 +60,38 @@ class Tickers:
 
 
 
-import csv
+
 import datetime
 import time
-
 import sqlite3
 
 
 class Fetcher:
 
-	def update_ticker(self, ticker, conn, current_time):
+	def update_ticker(self, ticker, conn, current_time, test=False):
 		#print(ticker, len(ticker))
 		s=Stock(str(ticker))
 		ticker_info = Stock(ticker).quote()
+
 		c = conn.cursor()
-		
-		cmd = ''' INSERT INTO StockData VALUES ('{}', '{}', '{}', '{}', '{}', '{}', {}, {} ) '''.format(current_time, ticker, ticker_info['low'], ticker_info['high'], ticker_info['open'],ticker_info['close'],
+		values = "('{}', '{}', '{}', '{}', '{}', '{}', {}, {})".format(current_time, ticker, ticker_info['low'], ticker_info['high'], ticker_info['open'],ticker_info['close'],
 			ticker_info['latestPrice'], ticker_info['latestVolume'])
+
+		if(test):
+			test_file = open('test_fetch.txt', 'a+')
+			test_file.write(values+'\n')
+			test_file.close()
+		cmd = ' INSERT INTO StockData VALUES ' + values
 		c.execute(cmd)
 		conn.commit()
+		
 
-	def fetch_all_data(self, ticker_file='tickers.txt'): #TODO: TickerFile
+	def fetch_all_data(self, ticker_file='tickers.txt', test=False): 
 
 		currentDT = datetime.datetime.now()
 		endTime = currentDT + datetime.timedelta(seconds=int(self.time_lim))
 		if(currentDT < endTime):
-			conn = sqlite3.connect(self.database_name)  #TODO connection check
+			conn = sqlite3.connect(self.database_name)  
 		while currentDT < endTime:
 			print(currentDT, endTime)
 			fp = open(ticker_file)
@@ -95,9 +101,10 @@ class Fetcher:
 
 			current_time = self.two_digit_time(currentDT)
 			for ticker in fp:
-				self.update_ticker(ticker.strip(), conn, current_time)
+				self.update_ticker(ticker.strip(), conn, current_time, test)
 			fp.close()
 			currentDT = datetime.datetime.now()
+			
 
 	def two_digit_time(self, currentDT):
 		hour = currentDT.hour
@@ -117,7 +124,15 @@ class Fetcher:
 	def __init__(self, db, tl):
 		self.database_name = db
 		self.time_lim = tl
-
+		try:
+			conn = sqlite3.connect(db)
+			c = conn.cursor()
+			c.execute(''' CREATE TABLE StockData  	(Time text, Ticker text, Low text, High text, Open text, Close text, Price real, Volume real)''')
+			conn.commit()
+		except:
+			pass
+	def __str__(self):
+		return 'time_limit = {}, database_name = {}'.format(self.time_lim, self.database_name)
 
 
 class Query:
@@ -127,14 +142,15 @@ class Query:
 		c= conn.cursor()
 		cmd = ''' SELECT * FROM StockData WHERE Time=='{}' and Ticker=='{}' '''.format(self.time, self.ticker)
 		c.execute(cmd)
-		print(c.fetchone())
+		return(c.fetchone())
 	
 	def __init__(self, db, t, tn):
 		self.database_name = db
 		self.time = t
 		self.ticker=tn
 		
-
+	def __str__(self):
+		return 'time = {}, database_name = {}, ticker = {}'.format(self.time, self.database_name, self.ticker)
 
 
 

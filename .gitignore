@@ -103,8 +103,9 @@ venv.bak/
 # mypy
 .mypy_cache/
 
-
+test_fetch.txt
 create_db.py
 stocks new.db
 test.py
+stocks.db
 tickers.txt
