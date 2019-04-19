@@ -203,6 +203,8 @@ class Fetcher:
 			hour = str(hour)
 
 		return('{}:{}'.format(hour, minute))
+	def __str__(self):
+		return 'time_limit = {}, database_name = {}'.format(self.time_lim, self.database_name)
 
 
 
