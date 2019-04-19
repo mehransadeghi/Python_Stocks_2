@@ -1,0 +1,230 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Welcome to Python Stocks’s documentation! &#8212; Python Stocks 1 documentation</title>
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="#">Python Stocks 1 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-stock">
+<span id="welcome-to-python-stocks-s-documentation"></span><h1>Welcome to Python Stocks’s documentation!<a class="headerlink" href="#module-stock" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="stock.Fetcher">
+<em class="property">class </em><code class="descclassname">stock.</code><code class="descname">Fetcher</code><span class="sig-paren">(</span><em>db</em>, <em>tl</em><span class="sig-paren">)</span><a class="headerlink" href="#stock.Fetcher" title="Permalink to this definition">¶</a></dt>
+<dd><p>A class to write all relevant information for the tickers in tickers.txt to a database</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>database_name</strong> (<em>string</em>) – The name of the database to store the information in</p></li>
+<li><p><strong>time_lim</strong> (<em>int</em>) – The time, in seconds, to update the database</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="stock.Fetcher.fetch_all_data">
+<code class="descname">fetch_all_data</code><span class="sig-paren">(</span><em>ticker_file='tickers.txt'</em><span class="sig-paren">)</span><a class="headerlink" href="#stock.Fetcher.fetch_all_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Waits until the start of the next minute and then writes the tickers from tickers.txt to a database</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>ticker_file</strong> (<em>string</em>) – Name of the file in which the tickers are stored</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>void</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="stock.Fetcher.two_digit_time">
+<code class="descname">two_digit_time</code><span class="sig-paren">(</span><em>currentDT</em><span class="sig-paren">)</span><a class="headerlink" href="#stock.Fetcher.two_digit_time" title="Permalink to this definition">¶</a></dt>
+<dd><p>Formats the time that will be inserted into the database</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>currentDT</strong> (<em>datetime</em>) – The current time</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The time formatted as HH:MM</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>string</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="stock.Fetcher.update_ticker">
+<code class="descname">update_ticker</code><span class="sig-paren">(</span><em>ticker</em>, <em>conn</em>, <em>current_time</em><span class="sig-paren">)</span><a class="headerlink" href="#stock.Fetcher.update_ticker" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new row in the database for the specified ticker and time</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ticker</strong> (<em>string</em>) – The ticker to be inserted</p></li>
+<li><p><strong>conn</strong> – The connection to the database</p></li>
+<li><p><strong>current_time</strong> (<em>datetime</em>) – The current time to be inserted</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>void</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="stock.Query">
+<em class="property">class </em><code class="descclassname">stock.</code><code class="descname">Query</code><span class="sig-paren">(</span><em>db</em>, <em>t</em>, <em>tn</em><span class="sig-paren">)</span><a class="headerlink" href="#stock.Query" title="Permalink to this definition">¶</a></dt>
+<dd><p>A class to query the database for a certain time and ticker</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>database_name</strong> (<em>string</em>) – The name of the database that information is stored in</p></li>
+<li><p><strong>time</strong> (<em>string</em>) – The time to search for in the database</p></li>
+<li><p><strong>ticker</strong> (<em>string</em>) – The ticker to search for in the database</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="stock.Query.print_info">
+<code class="descname">print_info</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#stock.Query.print_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Queries the database for a specific time and ticker</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>void</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="stock.Tickers">
+<em class="property">class </em><code class="descclassname">stock.</code><code class="descname">Tickers</code><span class="sig-paren">(</span><em>n</em><span class="sig-paren">)</span><a class="headerlink" href="#stock.Tickers" title="Permalink to this definition">¶</a></dt>
+<dd><p>A class to fetch all tickers and store them in a file tickers.txt</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>ticker_count</strong> (<em>int</em>) – The number of tickers to get</p>
+</dd>
+</dl>
+<dl class="method">
+<dt id="stock.Tickers.pull200ItemsURL">
+<code class="descname">pull200ItemsURL</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#stock.Tickers.pull200ItemsURL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clicks a button to make the webpage display 200 tickers</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The url to a page containing 200 ticker symbols</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>string</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="stock.Tickers.save_tickers">
+<code class="descname">save_tickers</code><span class="sig-paren">(</span><em>file_name='tickers.txt'</em><span class="sig-paren">)</span><a class="headerlink" href="#stock.Tickers.save_tickers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes ticker symbols to a file named tickers.txt</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>file_name</strong> (<em>string</em>) – Name of the file in which to store the ticker symbols</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>void</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<div class="toctree-wrapper compound">
+</div>
+</div>
+<div class="section" id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+</ul>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="#">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Welcome to Python Stocks’s documentation!</a></li>
+<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
+</ul>
+
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/index.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="#">Python Stocks 1 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Mehran Sadeghi and Tim Austin.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.0.1.
+    </div>
+  </body>
+</html>
